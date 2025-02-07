@@ -57,12 +57,13 @@ def choose(num):
     if state == 0:
         selected_mode = num
         state = 1
+        selected_question = random.randint(0, n_rows - 1)
         choice_generation()
-        print("state0->1")
+        #print("state0->1")
         #print(text)
     elif state == 1:
         state = 2
-        print("state1->2")
+        #print("state1->2")
         #print(text[num],vocabularies[selected_question]["meaning"])
         if text[num] == vocabularies[selected_question]["meaning"]:
             judgement(0)
@@ -75,7 +76,7 @@ def choose(num):
         if num == 6:
             button6.grid_forget()
             state = 1
-            print("state2->1")
+            #print("state2->1")
             selected_question = random.randint(0, n_rows - 1)
             choice_generation()
         elif text[num] == vocabularies[selected_question]["meaning"]:
@@ -84,8 +85,6 @@ def choose(num):
         else:
             judgement(1)
     update_buttons()
-    #print("aa")
-    #time.sleep(1)
     #label0.config(fg="black")
 
 def judgement(num):
@@ -103,24 +102,20 @@ def choice_generation():
         filtered_vocabularies = [v for v in vocabularies if v["part_of_speech"] == "0"]
         selected_vocabularies = random.sample(filtered_vocabularies, 6)
     for i in selected_vocabularies:
-            if i == vocabularies[selected_question]:
-                return 0
+        if i == vocabularies[selected_question]:
+            return 0
     answer_num = random.randint(0, 5)
-    selected_vocabularies[answer_num]=vocabularies[selected_question]
-    #print(selected_vocabularies)
+    selected_vocabularies[answer_num] = vocabularies[selected_question]
+
 
 def update_buttons():
     for i in range(len(selected_vocabularies)):
             text[i] = selected_vocabularies[i]['meaning']
     text[6]=vocabularies[selected_question]['word']
-    button0.config(text=text[0])
-    button1.config(text=text[1])
-    button2.config(text=text[2])
-    button3.config(text=text[3])
-    button4.config(text=text[4])
-    button5.config(text=text[5])
+    for i,button in enumerate(buttons):
+        button.config(text=text[i])
     label0.config(text=text[6])
-
+    
 
 label0 = tk.Label(root, text=text[6], width=15, height=2, bg=labels_bg, font=big_font, relief="solid")
 label0.grid(row=2, column=1, columnspan=3)
@@ -137,7 +132,7 @@ button4.grid(row=8, column=1)
 button5 = tk.Button(root, text=text[5], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(5))
 button5.grid(row=8, column=3)
 button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(6))
-
+buttons = [button0,button1,button2,button3,button4,button5]
 
 tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=0, column=2)
 
