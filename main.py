@@ -83,11 +83,7 @@ def choose(num):
             #playsound('C:\\Users\\gon23\\OneDrive\\デスクトップ\\python\\english\\goodsound.mp3')
         else:
             tochuu(1)
-    #elif state == 3:
-    #    button6.grid_forget
-    #    state = 1
-    #    selected_question = random.randint(0, n_rows - 1)
-    #    choice_generation()
+   
     update_buttons()
     #print("aa")
     #time.sleep(1)
