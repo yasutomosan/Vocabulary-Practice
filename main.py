@@ -31,9 +31,9 @@ mode = {0: "shuffle", 1: "verb", 2: "noun", 3: "adjective", 4: "adverb", 5: "oth
 text = {i: mode[i] for i in mode}
 text[6]="menu"
 selected_vocabularies = []
-selected_question = 0
-selected_mode = 0
-answer_num = 0
+selected_question = 0   #出題する問題
+selected_mode = 0   #選択した場所
+answer_num = 0  #正解の場所
 
 # CSVファイルからデータを読み込む関数
 def load_data(vocabularies):
@@ -107,9 +107,11 @@ def update_buttons():
 # プログラム起動時に単語を読み込む
 load_data(vocabularies)
 n_rows=len(vocabularies)
-
-
-
+filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
+filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
+filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "2"]
+filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
+filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
 
 
 
