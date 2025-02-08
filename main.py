@@ -47,10 +47,10 @@ def load_data(vocabularies):
 
 def choose(num):
     global state, selected_question, selected_mode
+    buttons[num]
     if state == 0:
         selected_mode = num
         state = 1
-        selected_question = random.randint(0, n_rows - 1)
         choice_generation()
     elif state == 1:
         state = 2
@@ -60,7 +60,7 @@ def choose(num):
         else:
             judgement(1)
     elif state == 2:
-        if text[num] == vocabularies[selected_question]["meaning"]:
+        if text[num] == filter[selected_mode][selected_question]["meaning"]:
             judgement(0)
         else:
             judgement(1)
@@ -71,34 +71,51 @@ def next():
     button6.grid_forget()
     buttons[answer_num].config(fg="black")
     state = 1
-    selected_question = random.randint(0, n_rows - 1)
     choice_generation()
     update_buttons()
+    #print(answer_num)
+    #print(selected_vocabularies)
 
 def judgement(num):
     buttons[answer_num].config(fg="red")
-    button6.config(text= "OK!" if num==0 else "umm...")
+    button6.config(text= "true" if num==0 else "false")
     button6.grid(row=10,column=1,columnspan=3)
 
 def choice_generation():
-    global selected_vocabularies,answer_num
-    if selected_mode == 0:
-        selected_vocabularies = random.sample(vocabularies, 6)
-    elif selected_mode == 1:
-        filtered_vocabularies = [v for v in vocabularies if v["part_of_speech"] == "0"]
-        selected_vocabularies = random.sample(filtered_vocabularies, 6)
-    for i in selected_vocabularies:
-        if i == vocabularies[selected_question]:
-            return 0
+    global selected_vocabularies,selected_question,answer_num
     answer_num = random.randint(0, 5)
-    selected_vocabularies[answer_num] = vocabularies[selected_question]
-    #print(selected_vocabularies)
 
+    selected_question = random.randint(0, len(filter[selected_mode]) - 1)
+    print(len(filter[selected_mode]))
+    selected_vocabularies = random.sample(filter[selected_mode], 6)
+    for i,vocabulary in enumerate(selected_vocabularies):
+        if vocabulary == filter[selected_mode][selected_question]:
+            answer_num=i
+            return 0
+    selected_vocabularies[answer_num] = filter[selected_mode][selected_question]
+    """
+    if selected_mode == 0:
+        selected_question = random.randint(0, n_rows - 1)
+        selected_vocabularies = random.sample(vocabularies, 6)
+        for i,vocabulary in enumerate(selected_vocabularies):
+            if vocabulary == vocabularies[selected_question]:
+                answer_num=i
+                return 0
+        selected_vocabularies[answer_num] = vocabularies[selected_question]
+    elif selected_mode == 1:
+        selected_question = random.randint(0, len(filtered_verb) - 1)
+        selected_vocabularies = random.sample(filtered_verb, 6)
+        for i,vocabulary in enumerate(selected_vocabularies):
+            if vocabulary == filtered_verb[selected_question]:
+                answer_num=i
+                return 0
+        selected_vocabularies[answer_num] = filtered_verb[selected_question]
+    """
 
 def update_buttons():
     for i in range(len(selected_vocabularies)):
             text[i] = selected_vocabularies[i]['meaning']
-    text[6]=vocabularies[selected_question]['word']
+    text[6]=filter[selected_mode][selected_question]['word']
     for i,button in enumerate(buttons):
         button.config(text=text[i])
     label0.config(text=text[6])
@@ -109,10 +126,11 @@ load_data(vocabularies)
 n_rows=len(vocabularies)
 filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
 filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
-filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "2"]
+filtered_adjective = [v for v in vocabularies if v["part_of_speech"] == "2"]
 filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
 filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
-
+filter = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_others]
+#print(filtered_verb)
 
 
 label0 = tk.Label(root, text=text[6], width=15, height=2, bg=labels_bg, font=big_font, relief="solid", borderwidth=bw)
