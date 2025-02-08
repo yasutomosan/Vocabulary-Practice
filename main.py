@@ -5,10 +5,12 @@ from tkinter import messagebox
 import random
 
 #色、フォント
-labels_bg = "gray100"
-mw_bg = "white"
+labels_bg = "gray100"   #ラベルの色
+mw_bg = "white" #背景の色
 nomal_font = ("Helvetica", 20)
 big_font = ("Helvetica", 30)
+bw = 3  #ラベル、ボタンの枠線の太さ
+
 
 # メインウィンドウの設定
 root = tk.Tk()
@@ -58,18 +60,20 @@ def choose(num):
         else:
             judgement(1)
     elif state == 2:
-        if num == 6:
-            button6.grid_forget()
-            buttons[answer_num].config(fg="black")
-            state = 1
-            selected_question = random.randint(0, n_rows - 1)
-            choice_generation()
-        elif text[num] == vocabularies[selected_question]["meaning"]:
+        if text[num] == vocabularies[selected_question]["meaning"]:
             judgement(0)
         else:
             judgement(1)
     update_buttons()
-    #label0.config(fg="black")
+
+def next():
+    global state,selected_question
+    button6.grid_forget()
+    buttons[answer_num].config(fg="black")
+    state = 1
+    selected_question = random.randint(0, n_rows - 1)
+    choice_generation()
+    update_buttons()
 
 def judgement(num):
     buttons[answer_num].config(fg="red")
@@ -88,6 +92,7 @@ def choice_generation():
             return 0
     answer_num = random.randint(0, 5)
     selected_vocabularies[answer_num] = vocabularies[selected_question]
+    #print(selected_vocabularies)
 
 
 def update_buttons():
@@ -99,21 +104,30 @@ def update_buttons():
     label0.config(text=text[6])
     
 
-label0 = tk.Label(root, text=text[6], width=15, height=2, bg=labels_bg, font=big_font, relief="solid")
+# プログラム起動時に単語を読み込む
+load_data(vocabularies)
+n_rows=len(vocabularies)
+
+
+
+
+
+
+label0 = tk.Label(root, text=text[6], width=15, height=2, bg=labels_bg, font=big_font, relief="solid", borderwidth=bw)
 label0.grid(row=2, column=1, columnspan=3)
-button0 = tk.Button(root, text=text[0], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(0))
+button0 = tk.Button(root, text=text[0], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(0))
 button0.grid(row=4, column=1)
-button1 = tk.Button(root, text=text[1], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(1))
+button1 = tk.Button(root, text=text[1], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(1))
 button1.grid(row=4, column=3)
-button2 = tk.Button(root, text=text[2], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(2))
+button2 = tk.Button(root, text=text[2], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(2))
 button2.grid(row=6, column=1)
-button3 = tk.Button(root, text=text[3], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(3))
+button3 = tk.Button(root, text=text[3], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(3))
 button3.grid(row=6, column=3)
-button4 = tk.Button(root, text=text[4], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(4))
+button4 = tk.Button(root, text=text[4], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(4))
 button4.grid(row=8, column=1)
-button5 = tk.Button(root, text=text[5], width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(5))
+button5 = tk.Button(root, text=text[5], width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(5))
 button5.grid(row=8, column=3)
-button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", command=lambda: choose(6))
+button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: next())
 buttons = [button0,button1,button2,button3,button4,button5]
 
 tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=0, column=2)
@@ -125,10 +139,6 @@ tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=5, column=0
 tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=7, column=0)
 tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=9, column=0)
 
-
-# プログラム起動時に本を読み込む
-load_data(vocabularies)
-n_rows=len(vocabularies)
 
 
 # メインループ
