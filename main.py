@@ -3,7 +3,6 @@ from playsound import playsound
 import csv
 from tkinter import messagebox
 import random
-import time
 
 #色、フォント
 labels_bg = "gray100"
@@ -13,7 +12,7 @@ big_font = ("Helvetica", 30)
 
 # メインウィンドウの設定
 root = tk.Tk()
-root.title("English")
+root.title("Vocabulary-Practice")
 root.state("zoomed")
 root.config(bg=mw_bg)
 
@@ -27,15 +26,12 @@ vocabularies = []
 #モード管理
 state = 0
 mode = {0: "shuffle", 1: "verb", 2: "noun", 3: "adjective", 4: "adverb", 5: "others"}
-text = {}
+text = {i: mode[i] for i in mode}
+text[6]="menu"
 selected_vocabularies = []
 selected_question = 0
 selected_mode = 0
-
-for i in mode:
-        text[i] = mode[i]
-        #print(text[i])
-text[6]="menu"
+answer_num = 0
 
 # CSVファイルからデータを読み込む関数
 def load_data(vocabularies):
@@ -43,59 +39,45 @@ def load_data(vocabularies):
     try:
         with open('words.csv', mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
-            for row in reader:
-                if row:
-                    vocabularies.append({"word": row[0], "meaning": row[1], "part_of_speech": row[2]})
+            vocabularies.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2]} for row in reader if row)
     except FileNotFoundError:
         messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
 
-
 def choose(num):
-    #print("aa")
-    global state, mode, selected_question, text, selected_mode
-    #print(state)
+    global state, selected_question, selected_mode
     if state == 0:
         selected_mode = num
         state = 1
         selected_question = random.randint(0, n_rows - 1)
         choice_generation()
-        #print("state0->1")
-        #print(text)
     elif state == 1:
         state = 2
-        #print("state1->2")
-        #print(text[num],vocabularies[selected_question]["meaning"])
         if text[num] == vocabularies[selected_question]["meaning"]:
             judgement(0)
-            print("OK!")
             #playsound('C:\\Users\\gon23\\OneDrive\\デスクトップ\\python\\english\\goodsound.mp3')
         else:
             judgement(1)
-        #print(text)
     elif state == 2:
         if num == 6:
             button6.grid_forget()
+            buttons[answer_num].config(fg="black")
             state = 1
-            #print("state2->1")
             selected_question = random.randint(0, n_rows - 1)
             choice_generation()
         elif text[num] == vocabularies[selected_question]["meaning"]:
             judgement(0)
-            print("OK!")
         else:
             judgement(1)
     update_buttons()
     #label0.config(fg="black")
 
 def judgement(num):
-    if num == 0:
-        button6.config(text="OK!")
-    elif num ==1:
-        button6.config(text="umm!")
+    buttons[answer_num].config(fg="red")
+    button6.config(text= "OK!" if num==0 else "umm...")
     button6.grid(row=10,column=1,columnspan=3)
 
 def choice_generation():
-    global selected_vocabularies
+    global selected_vocabularies,answer_num
     if selected_mode == 0:
         selected_vocabularies = random.sample(vocabularies, 6)
     elif selected_mode == 1:
