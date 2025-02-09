@@ -56,7 +56,6 @@ def choose(num):
         state = 2
         if text[num] == vocabularies[selected_question]["meaning"]:
             judgement(0)
-            #playsound('C:\\Users\\gon23\\OneDrive\\デスクトップ\\python\\english\\goodsound.mp3')
         else:
             judgement(1)
     elif state == 2:
@@ -93,24 +92,7 @@ def choice_generation():
             answer_num=i
             return 0
     selected_vocabularies[answer_num] = filter[selected_mode][selected_question]
-    """
-    if selected_mode == 0:
-        selected_question = random.randint(0, n_rows - 1)
-        selected_vocabularies = random.sample(vocabularies, 6)
-        for i,vocabulary in enumerate(selected_vocabularies):
-            if vocabulary == vocabularies[selected_question]:
-                answer_num=i
-                return 0
-        selected_vocabularies[answer_num] = vocabularies[selected_question]
-    elif selected_mode == 1:
-        selected_question = random.randint(0, len(filtered_verb) - 1)
-        selected_vocabularies = random.sample(filtered_verb, 6)
-        for i,vocabulary in enumerate(selected_vocabularies):
-            if vocabulary == filtered_verb[selected_question]:
-                answer_num=i
-                return 0
-        selected_vocabularies[answer_num] = filtered_verb[selected_question]
-    """
+    
 
 def update_buttons():
     for i in range(len(selected_vocabularies)):
