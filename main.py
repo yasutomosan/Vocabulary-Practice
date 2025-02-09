@@ -76,6 +76,7 @@ def next():
     #print(selected_vocabularies)
 
 def judgement(num):
+    print(num)
     buttons[answer_num].config(fg="red")
     button6.config(text= "true" if num==0 else "false")
     button6.grid(row=10,column=1,columnspan=3)
@@ -85,7 +86,7 @@ def choice_generation():
     answer_num = random.randint(0, 5)
 
     selected_question = random.randint(0, len(filter[selected_mode]) - 1)
-    print(len(filter[selected_mode]))
+    #print(len(filter[selected_mode]))
     selected_vocabularies = random.sample(filter[selected_mode], 6)
     for i,vocabulary in enumerate(selected_vocabularies):
         if vocabulary == filter[selected_mode][selected_question]:
