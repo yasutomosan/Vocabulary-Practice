@@ -1,5 +1,4 @@
 import tkinter as tk
-from playsound import playsound
 import csv
 from tkinter import messagebox
 import random
@@ -72,8 +71,6 @@ def next():
     state = 1
     choice_generation()
     update_buttons()
-    #print(answer_num)
-    #print(selected_vocabularies)
 
 def judgement(num):
     print(num)
@@ -86,7 +83,6 @@ def choice_generation():
     answer_num = random.randint(0, 5)
 
     selected_question = random.randint(0, len(filter[selected_mode]) - 1)
-    #print(len(filter[selected_mode]))
     selected_vocabularies = random.sample(filter[selected_mode], 6)
     for i,vocabulary in enumerate(selected_vocabularies):
         if vocabulary == filter[selected_mode][selected_question]:
