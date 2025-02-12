@@ -50,6 +50,7 @@ def choose(num):
     buttons[num]
     if state == 0:
         selected_mode = num
+        button7.grid(row=0,column=1)
         state = 1
         choice_generation()
     elif state == 1:
@@ -58,11 +59,6 @@ def choose(num):
             judgement(0)
         else:
             judgement(1)
-    #elif state == 2:
-    #    if text[num] == filter[selected_mode][selected_question]["meaning"]:
-    #        judgement(0)
-    #    else:
-    #        judgement(1)
     update_buttons()
 
 def next():
@@ -72,6 +68,18 @@ def next():
     state = 1
     choice_generation()
     update_buttons()
+
+def go_to_home():
+    global state,selected_question
+    button6.grid_forget()
+    button7.grid_forget()
+    state = 0
+    buttons[answer_num].config(fg="black")
+    text = {i: mode[i] for i in mode}
+    text[6]="menu"
+    for i,button in enumerate(buttons):
+        button.config(text=text[i])
+    label0.config(text=text[6])
 
 def judgement(num):
     buttons[answer_num].config(fg="red")
@@ -127,13 +135,14 @@ button4.grid(row=8, column=1)
 button5 = tk.Button(root, text=text[5], width=30, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(5))
 button5.grid(row=8, column=3)
 button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: next())
+button7 = tk.Button(root, text="ホームへ", width=10, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: go_to_home())
 buttons = [button0,button1,button2,button3,button4,button5]
 
 
-tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font).grid(row=0, column=2)
+tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font, height=2).grid(row=0, column=2)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=0, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=1, column=0)
-tk.Label(root, text="", width=4, height=3 ,bg=mw_bg, font=nomal_font).grid(row=3, column=0)
+tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font, height=3).grid(row=3, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=5, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=7, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=9, column=0)
