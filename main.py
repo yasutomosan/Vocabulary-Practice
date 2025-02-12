@@ -19,8 +19,8 @@ root.state("zoomed")
 root.config(bg=mw_bg)
 
 #タイトルバーアイコン
-photo = tk.PhotoImage(file = "pencil.png")  
-root.iconphoto(False, photo)
+photo1 = tk.PhotoImage(file = "pencil.png")  
+root.iconphoto(False, photo1)
 
 # データの保存
 vocabularies = []
@@ -54,7 +54,6 @@ def choose(num):
         state = 1
         choice_generation()
     elif state == 1:
-        #state = 2
         if text[num] == filter[selected_mode][selected_question]["meaning"]:
             judgement(0)
         else:
@@ -119,6 +118,8 @@ filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
 filter = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_others]
 
 
+photo2 = tk.PhotoImage(file="home.gif")
+photo2 = photo2.subsample(40, 40) #圧縮比率
 
 label0 = tk.Label(root, text=text[6], width=15, height=2, bg=labels_bg, font=big_font, relief="solid", borderwidth=bw)
 label0.grid(row=2, column=1, columnspan=3)
@@ -135,12 +136,11 @@ button4.grid(row=8, column=1)
 button5 = tk.Button(root, text=text[5], width=30, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(5))
 button5.grid(row=8, column=3)
 button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: next())
-button7 = tk.Button(root, text="ﾎｰﾑ", width=3, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: go_to_home())
+button7 = tk.Button(root, image=photo2, width=50,height=50, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: go_to_home())
 buttons = [button0,button1,button2,button3,button4,button5]
 
 
 tk.Label(root, text="", width=9, bg=mw_bg, font=nomal_font, height=2).grid(row=0, column=2)
-#tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=0, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=1, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font, height=2).grid(row=3, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=5, column=0)
