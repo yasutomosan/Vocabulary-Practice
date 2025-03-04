@@ -10,9 +10,8 @@ nomal_font = ("Helvetica", 20)
 big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
 bw = 3  #ラベル、ボタンの枠線の太さ
-words_file = "words.csv"
-check_file = "check.txt"
-
+#words_file = "words.csv"
+words_file = "toeic.csv"
 
 # メインウィンドウの設定
 root = tk.Tk()
@@ -30,7 +29,6 @@ photo2 = photo2.subsample(40, 40) #圧縮比率
 
 # データの保存用配列
 vocabularies = []
-check = []
 
 #モード管理
 state = 0
@@ -43,22 +41,28 @@ selected_mode = 0   #選択した場所
 answer_num = 0  #正解の場所
 
 # CSVファイルからデータを読み込む関数
-def load_data(vocabularies,check):
+def load_data(vocabularies):
     vocabularies.clear()
     try:
         with open(words_file, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
-            vocabularies.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2]} for row in reader if row)
+            vocabularies.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2], "check": row[3]} for row in reader if row)
     except FileNotFoundError:
         messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
+    #print(vocabularies)
+
+        
+def save_data(vocabularies):
     try:
-        with open(check_file, mode='r', newline='', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            #check.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2]} for row in reader if row)
-            for line in file:
-                check.append(int(line.strip()))
+        with open(words_file, mode='w', newline='', encoding='utf-8') as file:
+            fieldnames = ["word", "meaning", "part_of_speech", "check"]
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            #writer = csv.DictWriter(file)
+
+            #writer.writeheader()
+            writer.writerows(vocabularies)
     except FileNotFoundError:
-        messagebox.showwarning("FileNotFoundError","'check.txt' file not found  : /")
+        messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
 
 def choose(num):
     global state, selected_question, selected_mode
@@ -76,13 +80,12 @@ def choose(num):
             judgement(1)
 
 def next():
-    global state,selected_question,check
+    global state,selected_question
     button6.grid_forget()
     buttons[answer_num].config(fg="black")
     state = 1
     choice_generation()
     update_buttons()
-    check=op0
 
 def go_to_home():
     global state,selected_question
@@ -95,6 +98,7 @@ def go_to_home():
     for i,button in enumerate(buttons):
         button.config(text=text[i])
     label0.config(text=text[6])
+    save_data(vocabularies)
 
 def judgement(num):
     buttons[answer_num].config(fg="red")
@@ -121,12 +125,11 @@ def update_buttons():
     for i,button in enumerate(buttons):
         button.config(text=text[i])
     label0.config(text=text[6])
-    
 
 # プログラム起動時に単語を読み込む
-load_data(vocabularies,check)
+load_data(vocabularies)
 n_rows=len(vocabularies)
-print(check)
+
 #品詞毎に配列を作成
 filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
 filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
@@ -158,11 +161,6 @@ button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, reli
 button7 = tk.Button(root, image=photo2, width=50,height=50, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: go_to_home())
 buttons = [button0,button1,button2,button3,button4,button5]
 
-check = tk.StringVar(value=0)
-op0 = tk.Radiobutton(root, text= "OK!", bg=labels_bg, font=small_font, width=4,relief="solid", variable=check, value=0)
-op1 = tk.Radiobutton(root, text= "umm…", bg=labels_bg, font=small_font, width=4, relief="solid", variable=check, value=1)
-op0.grid(row=11,column=0)
-op1.grid(row=12,column=0)
 
 #button6.grid(row=11,column=1,columnspan=5,rowspan=2)
 
