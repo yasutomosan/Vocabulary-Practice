@@ -10,7 +10,8 @@ nomal_font = ("Helvetica", 20)
 big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
 bw = 3  #ラベル、ボタンの枠線の太さ
-my_file = "words.csv"
+words_file = "words.csv"
+check_file = "check.txt"
 
 
 # メインウィンドウの設定
@@ -29,6 +30,7 @@ photo2 = photo2.subsample(40, 40) #圧縮比率
 
 # データの保存用配列
 vocabularies = []
+check = []
 
 #モード管理
 state = 0
@@ -41,14 +43,22 @@ selected_mode = 0   #選択した場所
 answer_num = 0  #正解の場所
 
 # CSVファイルからデータを読み込む関数
-def load_data(vocabularies):
+def load_data(vocabularies,check):
     vocabularies.clear()
     try:
-        with open(my_file, mode='r', newline='', encoding='utf-8') as file:
+        with open(words_file, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
             vocabularies.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2]} for row in reader if row)
     except FileNotFoundError:
         messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
+    try:
+        with open(check_file, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            #check.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2]} for row in reader if row)
+            for line in file:
+                check.append(int(line.strip()))
+    except FileNotFoundError:
+        messagebox.showwarning("FileNotFoundError","'check.txt' file not found  : /")
 
 def choose(num):
     global state, selected_question, selected_mode
@@ -89,7 +99,7 @@ def go_to_home():
 def judgement(num):
     buttons[answer_num].config(fg="red")
     button6.config(text= "true" if num==0 else "false")
-    button6.grid(row=11,column=1,columnspan=5,rowspan=3)
+    button6.grid(row=10,column=1,columnspan=5,rowspan=3)
 
 def choice_generation():
     global selected_vocabularies,selected_question,answer_num
@@ -114,8 +124,9 @@ def update_buttons():
     
 
 # プログラム起動時に単語を読み込む
-load_data(vocabularies)
+load_data(vocabularies,check)
 n_rows=len(vocabularies)
+print(check)
 #品詞毎に配列を作成
 filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
 filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
