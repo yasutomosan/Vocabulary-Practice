@@ -46,7 +46,7 @@ def load_data(vocabularies):
     try:
         with open(words_file, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
-            vocabularies.extend({"word": row[0], "meaning": row[1], "part_of_speech": row[2], "check": row[3]} for row in reader if row)
+            vocabularies.extend({"number": row[0], "word": row[1], "meaning": row[2], "part_of_speech": row[3], "check": row[4]} for row in reader if row)
     except FileNotFoundError:
         messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
     #print(vocabularies)
@@ -55,7 +55,7 @@ def load_data(vocabularies):
 def save_data(vocabularies):
     try:
         with open(words_file, mode='w', newline='', encoding='utf-8') as file:
-            fieldnames = ["word", "meaning", "part_of_speech", "check"]
+            fieldnames = ["number","word", "meaning", "part_of_speech", "check"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             #writer = csv.DictWriter(file)
 
@@ -103,6 +103,8 @@ def go_to_home():
 def judgement(num):
     buttons[answer_num].config(fg="red")
     button6.config(text= "true" if num==0 else "false")
+    #if text[num] == filter[selected_mode][selected_question]["meaning"]:
+    #vocabularies.
     button6.grid(row=10,column=1,columnspan=5,rowspan=3)
 
 def choice_generation():
@@ -175,7 +177,6 @@ tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=8, column=0
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=10, column=0)
 
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=13, column=0)
-
 
 # メインループ
 root.mainloop()
