@@ -11,7 +11,7 @@ big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
 bw = 3  #ラベル、ボタンの枠線の太さ
 #words_file = "words.csv"
-words_file = "toeic.csv"
+words_file = "toeic_test.csv"
 
 # メインウィンドウの設定
 root = tk.Tk()
@@ -36,9 +36,10 @@ mode = {0: "shuffle", 1: "verb", 2: "noun", 3: "adjective", 4: "adverb", 5: "oth
 text = {i: mode[i] for i in mode}
 text[6]="menu"
 selected_vocabularies = []
-selected_question = 0   #出題する問題
+selected_question = 0   #出題する問題 vocaのnumを選択
 selected_mode = 0   #選択した場所
 answer_num = 0  #正解の場所
+selected_column = 0
 
 # CSVファイルからデータを読み込む関数
 def load_data(vocabularies):
@@ -74,7 +75,20 @@ def choose(num):
         choice_generation()
         update_buttons()
     elif state == 1:
-        if text[num] == filter[selected_mode][selected_question]["meaning"]:
+
+        #[item for item in data if item["num"] == 5]
+
+        #if text[num] == filter[selected_mode][selected_question]["meaning"]:
+    
+        print("filter[selected_mode]",filter[selected_mode])
+        print("len(filter)",len(filter))
+        print("selected_q",selected_question)
+        test = [item for item in vocabularies if int(item["number"]) == selected_question]
+        #test = selected_question
+        print(test[0]['meaning'],"==",text[num])
+        #print(text[num])
+        if text[num] == test[0]['meaning']:
+
             judgement(0)
         else:
             judgement(1)
@@ -108,22 +122,27 @@ def judgement(num):
     button6.grid(row=10,column=1,columnspan=5,rowspan=3)
 
 def choice_generation():
-    global selected_vocabularies,selected_question,answer_num
+    global selected_vocabularies,selected_question,answer_num,selected_column
     answer_num = random.randint(0, 5)
 
-    selected_question = random.randint(0, len(filter[selected_mode]) - 1)
+    selected_column = random.randint(0, len(filter[selected_mode]) - 1)
+    #print(selected_column)
+    selected_question = int(filter[selected_mode][selected_column]["number"])
+    #print(filter[selected_mode][selected_column])
+    #print("selected_question",selected_question)
     selected_vocabularies = random.sample(filter[selected_mode], 6)
     for i,vocabulary in enumerate(selected_vocabularies):
-        if vocabulary == filter[selected_mode][selected_question]:
+        #if vocabulary == filter[selected_mode][selected_question]:
+        if vocabulary == filter[selected_mode][selected_column]:
             answer_num=i
             return 0
-    selected_vocabularies[answer_num] = filter[selected_mode][selected_question]
+    selected_vocabularies[answer_num] = filter[selected_mode][selected_column]
     
 
 def update_buttons():
     for i in range(len(selected_vocabularies)):
             text[i] = selected_vocabularies[i]['meaning']
-    text[6]=filter[selected_mode][selected_question]['word']
+    text[6]=filter[selected_mode][selected_column]['word']
     for i,button in enumerate(buttons):
         button.config(text=text[i])
     label0.config(text=text[6])
