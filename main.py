@@ -11,6 +11,7 @@ big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
 bw = 3  #ラベル、ボタンの枠f線の太さ
 #words_file = "words.csv"
+#words_file = "toeic.csv"
 words_file = "toeic_test.csv"
 
 # メインウィンドウの設定
@@ -75,15 +76,23 @@ def choose(num):
         choice_generation()
         update_buttons()
     elif state == 1:
+        print("s_q:",selected_question)
+        print("vo",vocabularies)
+        index = next((i for i, item in enumerate(vocabularies) if int(item["number"]) == selected_question), None)
+
+
         test = [item for item in vocabularies if int(item["number"]) == selected_question]
         print(test[0]['meaning'],"==",text[num])
         if text[num] == test[0]['meaning']:
 
             judgement(0)
+            vocabularies[index]["check"]=0
         else:
             judgement(1)
+            vocabularies[index]["check"]=1
 
-def next():
+
+def next_question():
     global state,selected_question
     button6.grid_forget()
     buttons[answer_num].config(fg="black")
@@ -165,7 +174,7 @@ button4.grid(row=9, column=1, columnspan=2)
 button5 = tk.Button(root, text=text[5], width=30, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: choose(5))
 button5.grid(row=9, column=4, columnspan=2)
 #次へ行くボタン
-button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: next())
+button6 = tk.Button(root, text="", width=25, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: next_question())
 #ホームボタン
 button7 = tk.Button(root, image=photo2, width=50,height=50, bg=labels_bg, font=nomal_font, relief="solid", borderwidth=bw, command=lambda: go_to_home())
 buttons = [button0,button1,button2,button3,button4,button5]
