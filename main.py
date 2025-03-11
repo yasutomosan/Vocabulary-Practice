@@ -9,7 +9,7 @@ mw_bg = "white" #背景の色
 nomal_font = ("Helvetica", 20)
 big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
-bw = 3  #ラベル、ボタンの枠線の太さ
+bw = 3  #ラベル、ボタンの枠f線の太さ
 #words_file = "words.csv"
 words_file = "toeic_test.csv"
 
@@ -75,18 +75,8 @@ def choose(num):
         choice_generation()
         update_buttons()
     elif state == 1:
-
-        #[item for item in data if item["num"] == 5]
-
-        #if text[num] == filter[selected_mode][selected_question]["meaning"]:
-    
-        print("filter[selected_mode]",filter[selected_mode])
-        print("len(filter)",len(filter))
-        print("selected_q",selected_question)
         test = [item for item in vocabularies if int(item["number"]) == selected_question]
-        #test = selected_question
         print(test[0]['meaning'],"==",text[num])
-        #print(text[num])
         if text[num] == test[0]['meaning']:
 
             judgement(0)
@@ -126,10 +116,8 @@ def choice_generation():
     answer_num = random.randint(0, 5)
 
     selected_column = random.randint(0, len(filter[selected_mode]) - 1)
-    #print(selected_column)
     selected_question = int(filter[selected_mode][selected_column]["number"])
-    #print(filter[selected_mode][selected_column])
-    #print("selected_question",selected_question)
+
     selected_vocabularies = random.sample(filter[selected_mode], 6)
     for i,vocabulary in enumerate(selected_vocabularies):
         #if vocabulary == filter[selected_mode][selected_question]:
@@ -195,7 +183,8 @@ tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=6, column=0
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=8, column=0)
 tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=10, column=0)
 
-tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=13, column=0)
+tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=12, column=0)
+tk.Label(root, text="", width=4, bg=mw_bg, font=nomal_font).grid(row=11, column=0)
 
 # メインループ
 root.mainloop()
