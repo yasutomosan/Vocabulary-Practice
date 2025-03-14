@@ -116,7 +116,7 @@ def go_to_home():
 def judgement(num):
     buttons[answer_num].config(fg="red")
     button6.config(text= "true" if num==0 else "false")
-    #if text[num] == filter[selected_mode][selected_question]["meaning"]:
+    #if text[num] == filtered_vocabularies[selected_mode][selected_question]["meaning"]:
     #vocabularies.
     button6.grid(row=10,column=1,columnspan=5,rowspan=3)
 
@@ -124,22 +124,22 @@ def choice_generation():
     global selected_vocabularies,selected_question,answer_num,selected_column
     answer_num = random.randint(0, 5)
 
-    selected_column = random.randint(0, len(filter[selected_mode]) - 1)
-    selected_question = int(filter[selected_mode][selected_column]["number"])
+    selected_column = random.randint(0, len(filtered_vocabularies[selected_mode]) - 1)
+    selected_question = int(filtered_vocabularies[selected_mode][selected_column]["number"])
 
-    selected_vocabularies = random.sample(filter[selected_mode], 6)
+    selected_vocabularies = random.sample(filtered_vocabularies[selected_mode], 6)
     for i,vocabulary in enumerate(selected_vocabularies):
-        #if vocabulary == filter[selected_mode][selected_question]:
-        if vocabulary == filter[selected_mode][selected_column]:
+        #if vocabulary == filtered_vocabularies[selected_mode][selected_question]:
+        if vocabulary == filtered_vocabularies[selected_mode][selected_column]:
             answer_num=i
             return 0
-    selected_vocabularies[answer_num] = filter[selected_mode][selected_column]
+    selected_vocabularies[answer_num] = filtered_vocabularies[selected_mode][selected_column]
     
 
 def update_buttons():
     for i in range(len(selected_vocabularies)):
             text[i] = selected_vocabularies[i]['meaning']
-    text[6]=filter[selected_mode][selected_column]['word']
+    text[6]=filtered_vocabularies[selected_mode][selected_column]['word']
     for i,button in enumerate(buttons):
         button.config(text=text[i])
     label0.config(text=text[6])
@@ -154,7 +154,7 @@ filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
 filtered_adjective = [v for v in vocabularies if v["part_of_speech"] == "2"]
 filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
 filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
-filter = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_others]
+filtered_vocabularies = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_others]
 
 
 #問を出すラベル
