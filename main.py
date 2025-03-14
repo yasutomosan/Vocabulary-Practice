@@ -10,9 +10,9 @@ nomal_font = ("Helvetica", 20)
 big_font = ("Helvetica", 30)
 small_font = ("Helvetica", 10)
 bw = 3  #ラベル、ボタンの枠f線の太さ
-#words_file = "words.csv"
+words_file = "words.csv"
 #words_file = "toeic.csv"
-words_file = "toeic_test.csv"
+#words_file = "toeic_test.csv"
 
 # メインウィンドウの設定
 root = tk.Tk()
@@ -30,20 +30,28 @@ photo2 = photo2.subsample(40, 40) #圧縮比率
 
 # データの保存用配列
 vocabularies = []
+filtered_verb = None 
+filtered_noun = None 
+filtered_adjective = None 
+filtered_adverb = None 
+filtered_checked = None 
+filtered_others = None 
+filtered_vocabularies = None
 
 #モード管理
 state = 0
-mode = {0: "shuffle", 1: "verb", 2: "noun", 3: "adjective", 4: "adverb", 5: "others"}
+mode = {0: "shuffle", 1: "verb", 2: "noun", 3: "adjective", 4: "adverb", 5: "checked"}
 text = {i: mode[i] for i in mode}
 text[6]="menu"
 selected_vocabularies = []
-selected_question = 0   #出題する問題 vocaのnumを選択
-selected_mode = 0   #選択した場所
-answer_num = 0  #正解の場所
-selected_column = 0
+selected_question = None   #出題する問題 vocaのnumを選択
+selected_mode = None   #選択した場所
+answer_num = None  #正解の場所
+selected_column = None
 
 # CSVファイルからデータを読み込む関数
 def load_data(vocabularies):
+    global filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_checked,filtered_others,filtered_vocabularies
     vocabularies.clear()
     try:
         with open(words_file, mode='r', newline='', encoding='utf-8') as file:
@@ -52,6 +60,15 @@ def load_data(vocabularies):
     except FileNotFoundError:
         messagebox.showwarning("FileNotFoundError","'words.csv' file not found  : /")
     #print(vocabularies)
+    #品詞毎に配列を作成
+    filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
+    filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
+    filtered_adjective = [v for v in vocabularies if v["part_of_speech"] == "2"]
+    filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
+    filtered_checked = [v for v in vocabularies if v["check"] == "1"]
+    filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
+    filtered_vocabularies = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_checked,filtered_others]
+
 
         
 def save_data(vocabularies):
@@ -68,6 +85,7 @@ def save_data(vocabularies):
 
 def choose(num):
     global state, selected_question, selected_mode
+    #print("filtered_checked:",filtered_checked)
     buttons[num]
     if state == 0:
         selected_mode = num
@@ -76,13 +94,13 @@ def choose(num):
         choice_generation()
         update_buttons()
     elif state == 1:
-        print("s_q:",selected_question)
-        print("vo",vocabularies)
+        #print("s_q:",selected_question)
+        #print("vo",vocabularies)
         index = next((i for i, item in enumerate(vocabularies) if int(item["number"]) == selected_question), None)
 
 
         test = [item for item in vocabularies if int(item["number"]) == selected_question]
-        print(test[0]['meaning'],"==",text[num])
+        #print(test[0]['meaning'],"==",text[num])
         if text[num] == test[0]['meaning']:
 
             judgement(0)
@@ -148,13 +166,14 @@ def update_buttons():
 load_data(vocabularies)
 n_rows=len(vocabularies)
 
-#品詞毎に配列を作成
-filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
-filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
-filtered_adjective = [v for v in vocabularies if v["part_of_speech"] == "2"]
-filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
-filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
-filtered_vocabularies = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_others]
+##品詞毎に配列を作成
+#filtered_verb = [v for v in vocabularies if v["part_of_speech"] == "0"]
+#filtered_noun = [v for v in vocabularies if v["part_of_speech"] == "1"]
+#filtered_adjective = [v for v in vocabularies if v["part_of_speech"] == "2"]
+#filtered_adverb = [v for v in vocabularies if v["part_of_speech"] == "3"]
+#filtered_checked = [v for v in vocabularies if v["check"] == "1"]
+#filtered_others = [v for v in vocabularies if v["part_of_speech"] == "4"]
+#filtered_vocabularies = [vocabularies,filtered_verb,filtered_noun,filtered_adjective,filtered_adverb,filtered_checked,filtered_others]
 
 
 #問を出すラベル
